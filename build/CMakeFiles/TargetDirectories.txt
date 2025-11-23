@@ -1,0 +1,3 @@
+/Users/admin/Documents/Apps/TradingEngine/build/CMakeFiles/trading_engine.dir
+/Users/admin/Documents/Apps/TradingEngine/build/CMakeFiles/edit_cache.dir
+/Users/admin/Documents/Apps/TradingEngine/build/CMakeFiles/rebuild_cache.dir

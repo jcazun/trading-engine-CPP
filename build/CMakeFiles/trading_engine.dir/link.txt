@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/trading_engine.dir/src/Engine.cpp.o CMakeFiles/trading_engine.dir/src/Strategy.cpp.o CMakeFiles/trading_engine.dir/src/Utility.cpp.o CMakeFiles/trading_engine.dir/src/main.cpp.o -o trading_engine  -lsqlite3

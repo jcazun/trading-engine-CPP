@@ -1,0 +1,26 @@
+[
+{
+  "directory": "/Users/admin/Documents/Apps/TradingEngine/build",
+  "command": "/usr/bin/c++  -I/Users/admin/Documents/Apps/TradingEngine/include -g -std=gnu++17 -o CMakeFiles/trading_engine.dir/src/Engine.cpp.o -c /Users/admin/Documents/Apps/TradingEngine/src/Engine.cpp",
+  "file": "/Users/admin/Documents/Apps/TradingEngine/src/Engine.cpp",
+  "output": "CMakeFiles/trading_engine.dir/src/Engine.cpp.o"
+},
+{
+  "directory": "/Users/admin/Documents/Apps/TradingEngine/build",
+  "command": "/usr/bin/c++  -I/Users/admin/Documents/Apps/TradingEngine/include -g -std=gnu++17 -o CMakeFiles/trading_engine.dir/src/Strategy.cpp.o -c /Users/admin/Documents/Apps/TradingEngine/src/Strategy.cpp",
+  "file": "/Users/admin/Documents/Apps/TradingEngine/src/Strategy.cpp",
+  "output": "CMakeFiles/trading_engine.dir/src/Strategy.cpp.o"
+},
+{
+  "directory": "/Users/admin/Documents/Apps/TradingEngine/build",
+  "command": "/usr/bin/c++  -I/Users/admin/Documents/Apps/TradingEngine/include -g -std=gnu++17 -o CMakeFiles/trading_engine.dir/src/Utility.cpp.o -c /Users/admin/Documents/Apps/TradingEngine/src/Utility.cpp",
+  "file": "/Users/admin/Documents/Apps/TradingEngine/src/Utility.cpp",
+  "output": "CMakeFiles/trading_engine.dir/src/Utility.cpp.o"
+},
+{
+  "directory": "/Users/admin/Documents/Apps/TradingEngine/build",
+  "command": "/usr/bin/c++  -I/Users/admin/Documents/Apps/TradingEngine/include -g -std=gnu++17 -o CMakeFiles/trading_engine.dir/src/main.cpp.o -c /Users/admin/Documents/Apps/TradingEngine/src/main.cpp",
+  "file": "/Users/admin/Documents/Apps/TradingEngine/src/main.cpp",
+  "output": "CMakeFiles/trading_engine.dir/src/main.cpp.o"
+}
+]
