@@ -1,5 +1,7 @@
 #include "Strategy.h"
 
+/// @brief This strategy is used for comparing short-term and long-term moving averages to make buy/sell decisions.
+/// @param bar  The latest price bar data.
 void Strategy::onBar(const PriceBar& bar) {
     history.push_back(bar.close);
     if (history.size() > 20) {

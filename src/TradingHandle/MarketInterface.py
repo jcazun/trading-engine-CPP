@@ -61,7 +61,7 @@ class fileHandle:
             close_ =    row['Close']
             volume_ =   row['Volume']
             # print for debug purposes, remove later.
-            print(f"{time_}, {open_}, {high_}, {low_}, {close_}, {volume_}")
+            # print(f"{time_}, {open_}, {high_}, {low_}, {close_}, {volume_}") - code works! so im getting rid of the print statement
             cursor.execute(f"INSERT INTO prices VALUES (?,?,?,?,?,?,?)",
                 ("AAPL", time_, open_, high_, low_, close_, volume_))
         # commit saves changes and close ends connection
@@ -70,6 +70,7 @@ class fileHandle:
         dbIO.close()
 
 testing = fileHandle
+
 # commands to open the database and check data vvv
 # sqlite3 market_data.db
 # .tables
