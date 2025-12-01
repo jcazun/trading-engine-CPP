@@ -821,6 +821,7 @@ CMakeFiles/trading_engine.dir/src/Engine.cpp.o
  /Users/admin/Documents/Apps/TradingEngine/src/Engine.h
  /Users/admin/Documents/Apps/TradingEngine/src/PriceBar.h
  /Users/admin/Documents/Apps/TradingEngine/src/Strategy.h
+ /Users/admin/Documents/Apps/TradingEngine/src/Utility.h
 
 CMakeFiles/trading_engine.dir/src/Strategy.cpp.o
  /Users/admin/Documents/Apps/TradingEngine/src/Strategy.cpp

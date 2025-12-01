@@ -39,7 +39,7 @@ std::cout << "Starting trading engine..." << std::endl;
 Engine          engine;             // trading engine handler - handles strategy and execution
 fileHandle      filehandle;         // only necessary for simulations. this is txt based rather than db based
 pythonHandle    pythonhandle;       // python data ingestion handler
-moneyHandle     moneyhandle;        // money/account balance handler - might swap to engine class later to handle money in db
+//moneyHandle     moneyhandle;        // money/account balance handler - trying to get this managed in engine.cpp now
 
 //engine.loadData("data/prices.csv");
 pythonhandle.dataIngestionStartup(pythonExePath); // path to python executable
@@ -47,8 +47,8 @@ engine.dbConnectionSetup(dbFilePath); // assign the database connection from fil
 engine.loadData(engine.dbConnection); // load data from database connection - filled in member variable via dbConnection Setup
 engine.runReal(); // run the real-time trading engine
 //moneyhandle.updateBalance(balanceFileLocation, 150000.00); // create account with initial balance of 10,000.00
-moneyhandle.getCurrentBalance(balanceFileLocation);
-engine.run();
+//moneyhandle.getCurrentBalance(balanceFileLocation); - trying to get this managed in engine.cpp now
+//engine.run();
 //worker2.join(); // wait for the user input thread to finish - use when you want this guy to finish before continuing
 //worker.join(); // wait for the background thread to finish - use when you want this guy to finish before continuing
 

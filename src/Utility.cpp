@@ -139,17 +139,17 @@ bool pythonHandle::programHeartbeatCheck(pid_t& pyPID){
 /// file for user.
 /// @param fileLocation Location where balance file is located
 /// @returns current balance in file
-double moneyHandle::getCurrentBalance(const std::string& fileLocation)
+double moneyHandle::getCurrentBalance()
 {
     std::string line{};
     std::string balanceStr{};
     double balanceVal{};
     bool found = false;
 
-    bool exists = std::filesystem::exists(fileLocation);
+    bool exists = std::filesystem::exists(balanceFileLocation);
     if(exists)
     {
-        std::ifstream file(fileLocation);
+        std::ifstream file(balanceFileLocation);
         while(getline(file, line))
         {
             if(line.rfind("balance=", 0) == 0)
@@ -164,32 +164,22 @@ double moneyHandle::getCurrentBalance(const std::string& fileLocation)
         }
         if(!found)
         {
-            std::cout << "Balance entry not found in file: " << fileLocation << std::endl;
-            std::cout << "Would you like to start with a new account with initial balance of 10000.00? (y/n)" << std::endl;
-            char userInput;
-            std::cin >> userInput;
-            if(userInput=='y' || userInput=='Y')
-            {
-                std::ofstream file(fileLocation);
-                file << "balance=10000.00" << std::endl;
-                std::cout << "New account created with balance of 10000.00!" << std::endl;
-                file.close();
-                return 10000.00;
-            }
-            if(userInput=='n' || userInput=='N')
-            {
-                std::cout << "Exiting program. Please create an account file with a balance entry." << std::endl;
-                exit(0);
-            }
+            std::cout << "Balance entry not found in file: " << balanceFileLocation << std::endl;
+            std::cout << "Creating new account!" << std::endl;
+            std::ofstream file(balanceFileLocation);
+            file << "balance=10000.00" << std::endl;
+            std::cout << "New account created with balance of 10000.00!" << std::endl;
+            file.close();
+            return 10000.00;
         }
     }
 
     else
     {
-        std::cout << "File does not exist at location: " << fileLocation << std::endl;
+        std::cout << "File does not exist at location: " << balanceFileLocation << std::endl;
         std::cout << "Creating a new account with initial balance of 10000.00" << std::endl;
 
-        std::ofstream file(fileLocation);
+        std::ofstream file(balanceFileLocation);
         file << "balance=10000.00" << std::endl;
         std::cout << "New account created with balance of 10000.00!" << std::endl;
         file.close();
@@ -198,14 +188,18 @@ double moneyHandle::getCurrentBalance(const std::string& fileLocation)
     return 0.0; // default return if nothing else works -> should never reach here
 }
 
-void moneyHandle::updateBalance(const std::string& fileLocation, double newBalance)
+void moneyHandle::updateBalance(double delta)
 {
-    std::ofstream file(fileLocation);
+    // think about putting a mutex lock here later if multithreading becomes an issue
+    double cash = getCurrentBalance(); // get curr balance first before truncating file via opening (aka deleting contents of file)
+    double newBalance = cash + delta;
+    std::ofstream file(balanceFileLocation);
     if (!file.is_open())
     {
-        std::cerr << "Unable to open file for writing: " << fileLocation << std::endl;
+        std::cerr << "Unable to open file for writing: " << balanceFileLocation << std::endl;
         return;
     }
     file << "balance=" << newBalance << std::endl;
+    std::cout << "Updated balance to: " << newBalance << std::endl;
 }
 

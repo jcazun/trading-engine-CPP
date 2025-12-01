@@ -9,13 +9,17 @@ class moneyHandle
 {
     // start with balance in text file, then eventually move onto a database
     public:
-    //moneyHandle()
-    double getCurrentBalance(const std::string& fileLocation);
-    void updateBalance(const std::string& fileLocation, double newBalance);
-    void createAccount(const std::string& fileLocation, double initialBalance);
+    moneyHandle(const std::string initFileLocation) :   balance(0.0), 
+                                                        balanceFileLocation (initFileLocation){}
+    ~moneyHandle() {}
+    double getCurrentBalance();
+    void updateBalance(double delta);
+    void createAccount(double initialBalance);
 
     private:
     double balance;
+    const std::string balanceFileLocation;
+
 };
 
 /// Interface for managing the file that holds our market tracking information.

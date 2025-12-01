@@ -819,7 +819,8 @@ CMakeFiles/trading_engine.dir/src/Engine.cpp.o: /Users/admin/Documents/Apps/Trad
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stdint.h \
   /Users/admin/Documents/Apps/TradingEngine/src/Engine.h \
   /Users/admin/Documents/Apps/TradingEngine/src/PriceBar.h \
-  /Users/admin/Documents/Apps/TradingEngine/src/Strategy.h
+  /Users/admin/Documents/Apps/TradingEngine/src/Strategy.h \
+  /Users/admin/Documents/Apps/TradingEngine/src/Utility.h
 
 CMakeFiles/trading_engine.dir/src/Strategy.cpp.o: /Users/admin/Documents/Apps/TradingEngine/src/Strategy.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/Availability.h \
@@ -3281,8 +3282,6 @@ CMakeFiles/trading_engine.dir/src/main.cpp.o: /Users/admin/Documents/Apps/Tradin
 
 /Users/admin/Documents/Apps/TradingEngine/src/main.cpp:
 
-/Users/admin/Documents/Apps/TradingEngine/src/Utility.h:
-
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/select.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_uuid_t.h:
@@ -3310,6 +3309,8 @@ CMakeFiles/trading_engine.dir/src/main.cpp.o: /Users/admin/Documents/Apps/Tradin
 /Users/admin/Documents/Apps/TradingEngine/src/Utility.cpp:
 
 /Users/admin/Documents/Apps/TradingEngine/src/Strategy.cpp:
+
+/Users/admin/Documents/Apps/TradingEngine/src/Utility.h:
 
 /Users/admin/Documents/Apps/TradingEngine/src/Strategy.h:
 

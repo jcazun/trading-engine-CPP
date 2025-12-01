@@ -37,12 +37,12 @@ void Strategy::onBar(const PriceBar& bar) {
 /// @return true if the short-term trend is going up faster than the longer-term trend AND
 /// you are not holding that stock.   
 bool Strategy::shouldBuy() const {
-    return shortMA > longMA && !holding;
+    return shortMA > longMA; //&& !holding; - ignoring holding / position check for now
 }
 
 /// @brief Determines if the strategy should sell the stock based on the moving averages.
 /// @return true if the short-term trend is going down faster than the longer-term trend AND
 /// you are currently holding the stock.
 bool Strategy::shouldSell() const {
-    return shortMA < longMA && holding;
+    return shortMA < longMA; //&& holding; - ignoring holding / position check for now
 }

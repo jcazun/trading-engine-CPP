@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Strategy.h"
+#include "Utility.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -14,6 +15,14 @@ Engine::~Engine()
             std::cout << "Database connection closed." << std::endl;
         }
     }   
+
+Engine::Engine() :
+    moneyhandle(balanceFileLocation) // initialize moneyhandle with balance file location
+    {
+        // show user what they are starting off with before executing strategy
+        double initialBalance = moneyhandle.getCurrentBalance();
+        std::cout << "Engine initialized with account balance: " << initialBalance << std::endl;
+    } 
 
 void Engine::dbConnectionSetup(const std::string& dbFile) {
     // Implementation for setting up the database connection
@@ -82,6 +91,7 @@ void Engine::loadData(sqlite3* &dbConnection) {
             data.push_back(bar);
 
             // DEBUG PRINT!
+            /*
             std::cout << "DEBUG PRINT "
                       << bar.timestamp << ", "
                       << bar.open << ", "
@@ -89,6 +99,7 @@ void Engine::loadData(sqlite3* &dbConnection) {
                       << bar.low << ", "
                       << bar.close << ", "
                       << bar.volume << std::endl;
+                      */
     }
     std::cout<< "Data loaded from database successfully!\nNow executing trading engine..." <<std::endl;
     sqlite3_finalize(stmt);
@@ -102,30 +113,24 @@ void Engine::runReal() {
     Strategy strat;
     for(const auto& bar: data)
     {
-        std::cout << "debug print statement for runReal! Data is available!" << std::endl;
+        //std::cout << "debug print statement for runReal! Data is available!" << std::endl;
         strat.onBar(bar);
         if(strat.shouldBuy())
         {
             std::cout << "Real-time BUY signal at price: " << bar.close << std::endl;
-            // Execute buy logic here
             buy(bar.close);
         }
         else if(strat.shouldSell())
         {
             std::cout << "Real-time SELL signal at price: " << bar.close << std::endl;
-            // Execute sell logic here
             sell(bar.close);
         }
-
-
     }
 }
 
 void Engine::run() {
-    
     Strategy strat;
     for (const auto& bar : data) { // read only of each bar object in data list. auto deduces the type
-        std::cout << "debugging data coming in\n" << std::endl;
         strat.onBar(bar);
         if (strat.shouldBuy()) {
             buy(bar.close);
@@ -136,18 +141,32 @@ void Engine::run() {
     }
 }
 
-void Engine::buy(double price) {
-    if (position == 0) {
-        position =1;
+double Engine::buy(double price) {
+    // for now im ignoring position check to allow multiple buys
+    //if (position == 0) {
+    //    position =1;
         cash -= price;
         std::cout << "BUY @ " << price << "\n";
-    }
+        moneyhandle.updateBalance(-price);
+        return cash;
+    //}
+    //else 
+    //{
+    //    return cash; // no action taken, return current cash
+    //}
 }
 
-void Engine::sell(double price) {
-    if (position == 1) {
-        position = 0;
+double Engine::sell(double price) {
+    // for now im ignoring position check to allow multiple sells
+    //if (position == 1) {
+    //    position = 0;
         cash += price;
         std::cout << "SELL @ " << price << "\n";
-    }
+        moneyhandle.updateBalance(price);
+        return cash;
+    //}
+    //else 
+    //{
+    //    return cash; // no action taken, return current cash
+    //}
 }
