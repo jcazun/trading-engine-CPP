@@ -41,11 +41,12 @@ fileHandle      filehandle;         // only necessary for simulations. this is t
 pythonHandle    pythonhandle;       // python data ingestion handler
 moneyHandle     moneyhandle;        // money/account balance handler - might swap to engine class later to handle money in db
 
-engine.loadData("data/prices.csv");
+//engine.loadData("data/prices.csv");
 pythonhandle.dataIngestionStartup(pythonExePath); // path to python executable
 engine.dbConnectionSetup(dbFilePath); // assign the database connection from fileHandle to Engine
-//engine.loadData('market_data.db'); // load data from database connection
-moneyhandle.updateBalance(balanceFileLocation, 150000.00); // create account with initial balance of 10,000.00
+engine.loadData(engine.dbConnection); // load data from database connection - filled in member variable via dbConnection Setup
+engine.runReal(); // run the real-time trading engine
+//moneyhandle.updateBalance(balanceFileLocation, 150000.00); // create account with initial balance of 10,000.00
 moneyhandle.getCurrentBalance(balanceFileLocation);
 engine.run();
 //worker2.join(); // wait for the user input thread to finish - use when you want this guy to finish before continuing

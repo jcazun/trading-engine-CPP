@@ -103,8 +103,6 @@ void pythonHandle::dataIngestionStartup(const std::string& pythonExePath) {
     } else {
         std::cout << "Python process started successfully." << std::endl;
     }
-
-    
 }
 
 /// @brief  Stops the python data ingestion process.

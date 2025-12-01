@@ -26,10 +26,9 @@ void Engine::dbConnectionSetup(const std::string& dbFile) {
     }
 }
 
-void Engine::loadData(const std::string& filepath) {
+void Engine::loadData(const std::string& filepath) { 
     std::ifstream file(filepath);
     std::string line;
-    std::vector<PriceBar> data;
     getline(file, line); // Skip header line
     while (getline(file, line)) { // loop through each line in file each time its called
         std::stringstream ss(line);  // ss is a new string object created from line (copy) - ss is used for parsing a string
@@ -58,9 +57,10 @@ void Engine::loadData(sqlite3* &dbConnection) {
         return;
     }
 
-    PriceBar bar;
-    std::vector<PriceBar> data;
-    const char * sql = "SELECT date, open, high, low, close, volume FROM MARKET_DATA;";
+    const char * sql =
+    "SELECT timestamp, open, high, low, close, volume "
+    "FROM prices "
+    "WHERE symbol = 'AAPL';";
     sqlite3_stmt* stmt;
     int rc = sqlite3_prepare_v2(dbConnection, sql, -1, &stmt, nullptr);
     if (rc != 0) {
@@ -70,23 +70,62 @@ void Engine::loadData(sqlite3* &dbConnection) {
 
     // sqlite3_step executes one prepared statement, aka one row of data.
     // we are checking if the return code is SQLITE_ROW, meaning there is data to be read
-    while((rc == sqlite3_step(stmt)) == SQLITE_ROW)
-    {
-            bar.date = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-            bar.open = sqlite3_column_double(stmt, 1);
-            bar.high = sqlite3_column_double(stmt, 2);
-            bar.low = sqlite3_column_double(stmt, 3);
-            bar.close = sqlite3_column_double(stmt, 4);
-            bar.volume = sqlite3_column_double(stmt, 5);
+    while((rc = sqlite3_step(stmt)) == SQLITE_ROW)     // other keyword is SQLITE_DONE, meaning no more data to be read
+    {       // fill up data members from PriceBar into a PriceBar vector called data, then push back all data into data vector
+            PriceBar bar;
+            bar.timestamp = sqlite3_column_int(stmt, 0);
+            bar.open =      sqlite3_column_double(stmt, 1);
+            bar.high =      sqlite3_column_double(stmt, 2);
+            bar.low =       sqlite3_column_double(stmt, 3);
+            bar.close =     sqlite3_column_double(stmt, 4);
+            bar.volume =    sqlite3_column_double(stmt, 5);
             data.push_back(bar);
+
+            // DEBUG PRINT!
+            std::cout << "DEBUG PRINT "
+                      << bar.timestamp << ", "
+                      << bar.open << ", "
+                      << bar.high << ", "
+                      << bar.low << ", "
+                      << bar.close << ", "
+                      << bar.volume << std::endl;
     }
     std::cout<< "Data loaded from database successfully!\nNow executing trading engine..." <<std::endl;
     sqlite3_finalize(stmt);
 }
 
+void Engine::runReal() {
+    // Implementation for running the engine in real-time mode
+    // This function would handle real-time data processing and trading logic.
+    // For brevity, the implementation details are omitted here.
+
+    Strategy strat;
+    for(const auto& bar: data)
+    {
+        std::cout << "debug print statement for runReal! Data is available!" << std::endl;
+        strat.onBar(bar);
+        if(strat.shouldBuy())
+        {
+            std::cout << "Real-time BUY signal at price: " << bar.close << std::endl;
+            // Execute buy logic here
+            buy(bar.close);
+        }
+        else if(strat.shouldSell())
+        {
+            std::cout << "Real-time SELL signal at price: " << bar.close << std::endl;
+            // Execute sell logic here
+            sell(bar.close);
+        }
+
+
+    }
+}
+
 void Engine::run() {
+    
     Strategy strat;
     for (const auto& bar : data) { // read only of each bar object in data list. auto deduces the type
+        std::cout << "debugging data coming in\n" << std::endl;
         strat.onBar(bar);
         if (strat.shouldBuy()) {
             buy(bar.close);

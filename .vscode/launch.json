@@ -1,18 +1,18 @@
 {
     "version": "0.2.0",
     "configurations": [
-      {
-        "name": "Launch Trading Engine",
-        "type": "cppdbg",
-        "request": "launch",
-        "program": "${workspaceFolder}/build/trading_engine",   // <-- Correct executable path here
-        "args": [],
-        "stopAtEntry": false,
-        "cwd": "${workspaceFolder}",
-        "environment": [],
-        "externalConsole": false,
-        "MIMode": "lldb"
-      }
+        {
+            "name": "Launch Trading Engine",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/trading_engine",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "CMake Build"
+        }
     ]
-  }
-  
+}

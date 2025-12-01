@@ -10,6 +10,7 @@ class Engine {
     void loadData(sqlite3* &dbConnection);
     void dbConnectionSetup(const std::string& dbFile);
     void run();
+    void runReal();
     ~Engine();
     sqlite3* dbConnection = nullptr;
 

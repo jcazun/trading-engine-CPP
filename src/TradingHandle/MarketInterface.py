@@ -28,7 +28,7 @@ class fileHandle:
             
     def ingestMarketData(self) ->  pd.DataFrame: # eventually, return market data
         print("Ingesting market data...\n")
-        dataCapture = yf.Ticker("AAPL").history(period="1d", interval="60m") # using this for testing purposes
+        dataCapture = yf.Ticker("AAPL").history(period="1d", interval="5m") # using this for testing purposes
         print(dataCapture)
         return dataCapture
                 
