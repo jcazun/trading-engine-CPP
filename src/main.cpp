@@ -15,17 +15,19 @@ void backgroundTask()
     }
 }
 
-void backgroundTask2()
+void backgroundTask2(Engine* engine)
 {
-    while(true)
+    while(!engine->getTerminateEngine())
     {
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-        std::cout << "Heartbeat check from worker thread!" << std::endl;
+        std::this_thread::sleep_for(std::chrono::microseconds(100));
     }
+
+    std::cout << "Engine termination signal recieved. Either stop loss or take profit limit hit. Stopping engine..." << std::endl;
+    std::exit(1); // exit entire program
 }
 
 int main() {
-    const std::string balanceFileLocation = (std::filesystem::current_path() / ".." / "data" / "account_balance.txt").string();
+const std::string balanceFileLocation = (std::filesystem::current_path() / ".." / "data" / "account_balance.txt").string();
     // must call join or detach everytime a thread is called.
     // detach lets the thread run independently (meaning we do not halt the execution for it to complete)
     // and join waits for the thread to finish if not done by the time we call join
@@ -41,16 +43,15 @@ fileHandle      filehandle;         // only necessary for simulations. this is t
 pythonHandle    pythonhandle;       // python data ingestion handler
 //moneyHandle     moneyhandle;        // money/account balance handler - trying to get this managed in engine.cpp now
 
-//engine.loadData("data/prices.csv");
+thread worker(backgroundTask2, &engine); // create a thread that runs backgroundTask2 and pass in engine pointer
+//worker.detach(); // detach the thread so it runs independently- use when you dont need to wait for this guy to finish
+
 pythonhandle.dataIngestionStartup(pythonExePath); // path to python executable
 engine.dbConnectionSetup(dbFilePath); // assign the database connection from fileHandle to Engine
 engine.loadData(engine.dbConnection); // load data from database connection - filled in member variable via dbConnection Setup
 engine.runReal(); // run the real-time trading engine
-//moneyhandle.updateBalance(balanceFileLocation, 150000.00); // create account with initial balance of 10,000.00
-//moneyhandle.getCurrentBalance(balanceFileLocation); - trying to get this managed in engine.cpp now
-//engine.run();
-//worker2.join(); // wait for the user input thread to finish - use when you want this guy to finish before continuing
-//worker.join(); // wait for the background thread to finish - use when you want this guy to finish before continuing
+
+worker.join(); // wait for the background thread to finish - use when you want this guy to finish before continuing
 
 return 0;
 }

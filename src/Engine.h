@@ -12,6 +12,8 @@ class Engine {
     void dbConnectionSetup(const std::string& dbFile);
     void run();
     void runReal();
+    bool getTerminateEngine() const { return terminateEngine.load(); }
+    bool setTerminateEngine(bool value) { terminateEngine.store(value); return terminateEngine.load(); }
     ~Engine();
     Engine();
 
@@ -23,7 +25,13 @@ class Engine {
     moneyHandle moneyhandle;
     double cash = 10000.0;
     int position = 0;
+    double maxBalance = 0.0; // max balance achieved during trading session
+    double minBalance = 1000000.0; // min balance achieved during trading session
+    const u_int profitThresholdPercent = 2; // 5% profit threshold
+    const int lossThresholdPercent = -2;    // 5% loss threshold
 
+    std::atomic<bool> terminateEngine = false;
+    bool getBalanceRatio(double currentBalance);    // check if either we hit our stop loss or take profit limits
     double buy(double price);
     double sell(double price);
 };

@@ -21,6 +21,8 @@ Engine::Engine() :
     {
         // show user what they are starting off with before executing strategy
         double initialBalance = moneyhandle.getCurrentBalance();
+        maxBalance = initialBalance;
+        minBalance = initialBalance;
         std::cout << "Engine initialized with account balance: " << initialBalance << std::endl;
     } 
 
@@ -119,11 +121,15 @@ void Engine::runReal() {
         {
             std::cout << "Real-time BUY signal at price: " << bar.close << std::endl;
             buy(bar.close);
+            double currentBalance = moneyhandle.getCurrentBalance();
+            bool stopLimitHit = getBalanceRatio(currentBalance); // check if we hit either our stop loss or take profit limits
         }
         else if(strat.shouldSell())
         {
             std::cout << "Real-time SELL signal at price: " << bar.close << std::endl;
             sell(bar.close);
+            double currentBalance = moneyhandle.getCurrentBalance();
+            bool stopLimitHit = getBalanceRatio(currentBalance); // check if we hit either our stop loss or take profit limits
         }
     }
 }
@@ -146,6 +152,9 @@ double Engine::buy(double price) {
     //if (position == 0) {
     //    position =1;
         cash -= price;
+        if(cash > maxBalance) {
+            maxBalance = cash;
+        }
         std::cout << "BUY @ " << price << "\n";
         moneyhandle.updateBalance(-price);
         return cash;
@@ -169,4 +178,23 @@ double Engine::sell(double price) {
     //{
     //    return cash; // no action taken, return current cash
     //}
+
+
+}
+
+bool Engine::getBalanceRatio(double currentBalance) {
+    double balanceChange = currentBalance - minBalance;
+    double balanceChangePercent = (balanceChange / minBalance) * 100.0;
+
+    if (balanceChangePercent >= profitThresholdPercent) {
+        std::cout << "Take Profit Triggered! Balance increased by " << balanceChangePercent << "%\n";
+        setTerminateEngine(true);//terminateEngine = true;
+        return true;
+    } 
+    else if (balanceChangePercent <= lossThresholdPercent) {
+        std::cout << "Stop Loss Triggered! Balance decreased by " << balanceChangePercent << "%\n";
+        setTerminateEngine(true);//terminateEngine = true;
+        return true;
+    }
+    return false; // no thresholds hit
 }

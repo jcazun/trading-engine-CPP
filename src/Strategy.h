@@ -12,5 +12,7 @@ class Strategy {
     std::deque<double> history;
     double shortMA = 0.0; 
     double longMA  = 0.0;
+    double profitLimit = 0.0;
+    double lossLimit = 0.0;
     bool holding = false;
 };
