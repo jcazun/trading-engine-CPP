@@ -28,6 +28,7 @@ class fileHandle:
             
     def __init__(self, db_path: str = 'market_data.db'):
         self.dbIO = sql3.connect(db_path)
+        self.marketInfo = marketInfo()
     
     def ingestMarketData(self) -> pd.DataFrame: # eventually, return market data
         print("Ingesting market data...\n")
@@ -48,6 +49,7 @@ class fileHandle:
         cursor = self.dbIO.cursor()
         cursor.execute(query, (symbol,))
         result = cursor.fetchone()
+        print (result)   # - DEBUG - DELETE WHEN DONE!
         return result[0] if result and result[0] is not None else 0
     
     def disconnectFromDatabase(self):
@@ -75,7 +77,7 @@ class fileHandle:
         cursor = self.dbIO.cursor()
         # poll latest timeStamp, if no new data - no need to commit
         compareTimestamp = self.lastCapturedTimestamp(symbol="AAPL")
-        if compareTimestamp > lastTimestamp:
+        if not self.marketInfo.marketIsClosed() and compareTimestamp > lastTimestamp: # market is open and new data available
             # create structure if it doesnt exist - really only need to do once
             self.generateSchema()
             marketData = self.ingestMarketData()
@@ -98,6 +100,25 @@ class fileHandle:
             self.disconnectFromDatabase()
             return False
 
+class marketInfo:
+    
+    def __init__(self, timeZone: str = "UTC"):
+        self.timezone = timezone
+        
+    def marketIsClosed(self) -> bool:
+        now = datetime.datetime.now(datetime.timezone.utc)
+        if now.weekday() >= 5 # weekend, market closed
+            return True
+        
+        if now.hour < 13 or (now.hour ==13 and now.minute < 30): # before 930AM EST
+            return True
+        
+        if now.hour > 20 or (now.hour == 20 and now.minute > 0): # after 4pm EST
+            return True
+        
+        return False
+    
+
 testing = fileHandle()
 
 # commands to open the database and check data vvv
@@ -108,6 +129,7 @@ testing = fileHandle()
 
 # get initial last captured timestamp on boot to start using that against new data
 initialLastTimestamp = testing.lastCapturedTimestamp(symbol="AAPL")
+print (initialLastTimestamp)    # - DEBUG - DELETE WHEN DONE!
 while True:
     testing.writeDataToDatabase(initialLastTimestamp)
     # sleep for a bit before polling again
