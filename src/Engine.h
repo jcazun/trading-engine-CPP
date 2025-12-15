@@ -27,8 +27,8 @@ class Engine {
     int position = 0;
     double maxBalance = 0.0; // max balance achieved during trading session
     double minBalance = 1000000.0; // min balance achieved during trading session
-    const u_int profitThresholdPercent = 2; // 5% profit threshold
-    const int lossThresholdPercent = -2;    // 5% loss threshold
+    const u_int profitThresholdPercent = 4; // 4% profit threshold
+    const int lossThresholdPercent = -2;    // 2% loss threshold
 
     std::atomic<bool> terminateEngine = false;
     bool getBalanceRatio(double currentBalance);    // check if either we hit our stop loss or take profit limits

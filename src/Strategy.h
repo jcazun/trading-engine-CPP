@@ -16,3 +16,5 @@ class Strategy {
     double lossLimit = 0.0;
     bool holding = false;
 };
+
+class Strategy_2

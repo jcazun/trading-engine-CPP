@@ -26,6 +26,24 @@ void backgroundTask2(Engine* engine)
     std::exit(1); // exit entire program
 }
 
+// convert this to a thread
+void dataIngestion(const std::string& pythonExePath)
+{
+    // use filesystem to get current path
+    namespace fs = std::filesystem;
+    fs::path projectPath = fs::current_path().parent_path();
+    fs::path fullPath = projectPath / "src"/ "TradingHandle" / "MarketInterface.py";
+    std::cout << "Starting Python data ingestion process at: " + fullPath.string() << std::endl;
+    std::string cmd = "python3 " + fullPath.string();
+    // didnt even know you could 
+    int result = std::system(cmd.c_str());
+    if (result == -1) {
+        std::cerr << "Error starting Python process." << std::endl;
+    } else {
+        std::cout << "Ingesting data..." << std::endl;
+    }
+}
+
 int main() {
 const std::string balanceFileLocation = (std::filesystem::current_path() / ".." / "data" / "account_balance.txt").string();
     // must call join or detach everytime a thread is called.
@@ -44,8 +62,8 @@ pythonHandle    pythonhandle;       // python data ingestion handler
 //moneyHandle     moneyhandle;        // money/account balance handler - trying to get this managed in engine.cpp now
 
 thread worker(backgroundTask2, &engine); // create a thread that runs backgroundTask2 and pass in engine pointer
+thread dataIngester(dataIngestion, pythonExePath); // create a thread that runs dataIngestion and pass in pythonExePath
 //worker.detach(); // detach the thread so it runs independently- use when you dont need to wait for this guy to finish
-
 pythonhandle.dataIngestionStartup(pythonExePath); // path to python executable
 engine.dbConnectionSetup(dbFilePath); // assign the database connection from fileHandle to Engine
 engine.loadData(engine.dbConnection); // load data from database connection - filled in member variable via dbConnection Setup
